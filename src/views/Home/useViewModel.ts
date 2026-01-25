@@ -74,6 +74,10 @@ export function useViewModel() {
     const animationFrameId = ref<any>(null)
     const playingAudios = ref<HTMLAudioElement[]>([])
 
+    // 中奖者展示动画相关
+    const showWinnerShowcase = ref(false)
+    const showcaseWinners = ref<IPersonConfig[]>([])
+
     // 抽奖音乐相关
     const lotteryMusic = ref<HTMLAudioElement | null>(null)
 
@@ -568,11 +572,18 @@ export function useViewModel() {
         // 播放结束音效
         playEndSound()
 
-        //   clearInterval(intervalTimer.value)
-        //   intervalTimer.value = null
         canOperate.value = false
         rollBall(0, 1)
 
+        // 立即显示中奖者展示动画
+        showcaseWinners.value = [...luckyTargets.value]
+        showWinnerShowcase.value = true
+    }
+
+    /**
+     * @description: 展示动画结束后，显示抽中的卡片
+     */
+    function showWinnerCards() {
         const windowSize = { width: window.innerWidth, height: window.innerHeight }
         luckyTargets.value.forEach((person: IPersonConfig, index: number) => {
             const cardIndex = selectCard(luckyCardList.value, tableData.value.length, person.id)
@@ -623,8 +634,6 @@ export function useViewModel() {
                 .start()
                 .onComplete(() => {
                     playWinMusic()
-
-                    confettiFire()
                     resetCamera()
                 })
         })
@@ -708,6 +717,16 @@ export function useViewModel() {
 
         enterLottery()
         currentStatus.value = LotteryStatus.init
+    }
+
+    /**
+     * @description: 关闭中奖者展示动画
+     */
+    function closeWinnerShowcase() {
+        showWinnerShowcase.value = false
+        showcaseWinners.value = []
+        // 显示中奖卡片
+        showWinnerCards()
     }
 
     /**
@@ -909,5 +928,10 @@ export function useViewModel() {
         isInitialDone,
         titleFont,
         titleFontSyncGlobal,
+        // 中奖者展示相关
+        showWinnerShowcase,
+        showcaseWinners,
+        closeWinnerShowcase,
+        currentPrize,
     }
 }

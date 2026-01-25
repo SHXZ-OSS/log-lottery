@@ -5,11 +5,29 @@ import HeaderTitle from './components/HeaderTitle/index.vue'
 import OptionButton from './components/OptionsButton/index.vue'
 import PrizeList from './components/PrizeList/index.vue'
 import StarsBackground from './components/StarsBackground/index.vue'
+import WinnerShowcase from '@/components/WinnerShowcase/index.vue'
 import { useViewModel } from './useViewModel'
 import 'vue-toast-notification/dist/theme-sugar.css'
 
 const viewModel = useViewModel()
-const { setDefaultPersonList, tableData, currentStatus, enterLottery, stopLottery, containerRef, startLottery, continueLottery, quitLottery, isInitialDone, titleFont, titleFontSyncGlobal } = viewModel
+const {
+    setDefaultPersonList,
+    tableData,
+    currentStatus,
+    enterLottery,
+    stopLottery,
+    containerRef,
+    startLottery,
+    continueLottery,
+    quitLottery,
+    isInitialDone,
+    titleFont,
+    titleFontSyncGlobal,
+    showWinnerShowcase,
+    showcaseWinners,
+    closeWinnerShowcase,
+    currentPrize,
+} = viewModel
 const globalConfig = useStore().globalConfig
 
 const { getTopTitle: topTitle, getTextColor: textColor, getTextSize: textSize, getBackground: homeBackground } = storeToRefs(globalConfig)
@@ -39,6 +57,14 @@ const { getTopTitle: topTitle, getTextColor: textColor, getTextSize: textSize, g
   </div>
   <StarsBackground :home-background="homeBackground" />
   <PrizeList class="absolute left-0 top-32" />
+
+  <!-- 中奖者展示动画 -->
+  <WinnerShowcase
+    :visible="showWinnerShowcase"
+    :winners="showcaseWinners"
+    :prize="currentPrize"
+    @close="closeWinnerShowcase"
+  />
 </template>
 
 <style scoped lang="scss">
