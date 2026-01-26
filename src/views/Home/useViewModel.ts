@@ -578,6 +578,9 @@ export function useViewModel() {
         // 立即显示中奖者展示动画
         showcaseWinners.value = [...luckyTargets.value]
         showWinnerShowcase.value = true
+
+        // 同时开始显示中奖卡片（在背景进行）
+        showWinnerCards()
     }
 
     /**
@@ -725,8 +728,7 @@ export function useViewModel() {
     function closeWinnerShowcase() {
         showWinnerShowcase.value = false
         showcaseWinners.value = []
-        // 显示中奖卡片
-        showWinnerCards()
+        // 卡片已经在展示动画期间显示了，这里不需要再调用 showWinnerCards()
     }
 
     /**
