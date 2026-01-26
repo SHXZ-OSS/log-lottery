@@ -20,6 +20,16 @@ export interface Separate {
     count: number
     isUsedCount: number
 }
+// 内定人员配置
+export interface FixedWinnerItem {
+    uuid: string // 人员uuid
+    name: string // 人员姓名（用于显示）
+    position?: number // 指定位置（从1开始），不指定则随机分配位置
+}
+export interface FixedWinners {
+    enable: boolean // 是否启用内定
+    list: FixedWinnerItem[] // 内定人员列表
+}
 export interface IPrizeConfig {
     id: number | string
     name: string
@@ -40,6 +50,7 @@ export interface IPrizeConfig {
     isShow: boolean
     isUsed: boolean
     frequency: number
+    fixedWinners?: FixedWinners // 内定配置
 }
 export interface IMusic {
     id: string

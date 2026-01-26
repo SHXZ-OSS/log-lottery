@@ -28,6 +28,10 @@ export const usePrizeConfig = defineStore('prize', {
                     isShow: false,
                     isUsed: false,
                     frequency: 1,
+                    fixedWinners: {
+                        enable: false,
+                        list: [],
+                    },
                 } as IPrizeConfig,
             },
         }
@@ -133,6 +137,10 @@ export const usePrizeConfig = defineStore('prize', {
                 isShow: false,
                 isUsed: false,
                 frequency: 1,
+                fixedWinners: {
+                    enable: false,
+                    list: [],
+                },
             } as IPrizeConfig
         },
         // 重置所有配置
@@ -160,6 +168,10 @@ export const usePrizeConfig = defineStore('prize', {
                     isShow: false,
                     isUsed: false,
                     frequency: 1,
+                    fixedWinners: {
+                        enable: false,
+                        list: [],
+                    },
                 } as IPrizeConfig,
             }
         },

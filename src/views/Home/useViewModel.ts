@@ -529,8 +529,126 @@ export function useViewModel() {
             }
         }
         luckyCount.value = leftover < luckyCount.value ? leftover : luckyCount.value
-        // 重构抽奖函数
-        luckyTargets.value = getRandomElements(personPool.value, luckyCount.value)
+
+        // 内定功能处理
+        const fixedWinners = currentPrize.value.fixedWinners
+        if (fixedWinners && fixedWinners.enable && fixedWinners.list.length > 0) {
+            // 计算当前抽奖的位置范围（基于已抽取人数）
+            const alreadyDrawn = currentPrize.value.isUsedCount
+            const positionStart = alreadyDrawn + 1 // 本次抽奖的起始位置（1-based）
+            const positionEnd = alreadyDrawn + luckyCount.value // 本次抽奖的结束位置
+
+            // 从人员池中筛选出内定人员（必须在当前可抽奖人员池中）
+            const fixedPersons: IPersonConfig[] = [] // 无位置指定的内定人员
+            const fixedPositionMap = new Map<number, IPersonConfig>() // 本次位置 -> 人员
+            const futureFixedUuids = new Set<string>() // 指定了未来位置的人员，本次不参与
+
+            for (const fixed of fixedWinners.list) {
+                const person = personPool.value.find(p => p.uuid === fixed.uuid)
+                if (person) {
+                    if (fixed.position) {
+                        // 有指定位置
+                        if (fixed.position >= positionStart && fixed.position <= positionEnd) {
+                            // 位置在本次抽奖范围内，转换为本次的相对位置
+                            const relativePosition = fixed.position - alreadyDrawn
+                            fixedPositionMap.set(relativePosition, person)
+                        }
+                        else if (fixed.position > positionEnd) {
+                            // 位置在未来的抽奖中，本次不参与
+                            futureFixedUuids.add(fixed.uuid)
+                        }
+                        // 如果 position < positionStart，说明已经过了，按无位置处理
+                        else {
+                            fixedPersons.push(person)
+                        }
+                    }
+                    else {
+                        // 无指定位置的内定人员
+                        fixedPersons.push(person)
+                    }
+                }
+            }
+
+            const totalFixedCount = fixedPositionMap.size + fixedPersons.length
+
+            if (totalFixedCount >= luckyCount.value) {
+                // 内定人数 >= 需要抽取的人数，从内定人员中随机选取
+                const result: IPersonConfig[] = Array.from({ length: luckyCount.value })
+
+                // 填入有指定位置的人员
+                fixedPositionMap.forEach((person, position) => {
+                    result[position - 1] = person
+                })
+
+                // 计算剩余需要填充的位置
+                const emptyPositions: number[] = []
+                for (let i = 0; i < luckyCount.value; i++) {
+                    if (!result[i]) {
+                        emptyPositions.push(i)
+                    }
+                }
+
+                // 从无位置的内定人员中随机选取
+                const selectedForEmpty = getRandomElements(fixedPersons, emptyPositions.length)
+                emptyPositions.forEach((pos, idx) => {
+                    result[pos] = selectedForEmpty[idx]
+                })
+
+                luckyTargets.value = result.filter(Boolean)
+            }
+            else {
+                // 内定人数 < 需要抽取的人数，内定人员必中，剩余随机抽取
+                const result: IPersonConfig[] = Array.from({ length: luckyCount.value })
+
+                // 填入有指定位置的人员
+                fixedPositionMap.forEach((person, position) => {
+                    result[position - 1] = person
+                })
+
+                // 从人员池中移除本次参与的内定人员和未来位置的人员
+                const excludeUuids = new Set([
+                    ...fixedPersons.map(p => p.uuid),
+                    ...Array.from(fixedPositionMap.values()).map(p => p.uuid),
+                    ...futureFixedUuids,
+                ])
+                const remainingPool = personPool.value.filter(p => !excludeUuids.has(p.uuid))
+
+                // 计算剩余需要填充的位置（排除已有位置指定的）
+                const emptyPositions: number[] = []
+                for (let i = 0; i < luckyCount.value; i++) {
+                    if (!result[i]) {
+                        emptyPositions.push(i)
+                    }
+                }
+
+                // 先填入无位置指定的内定人员
+                let fixedIdx = 0
+                const emptyForRandom: number[] = []
+                for (const pos of emptyPositions) {
+                    if (fixedIdx < fixedPersons.length) {
+                        result[pos] = fixedPersons[fixedIdx]
+                        fixedIdx++
+                    }
+                    else {
+                        emptyForRandom.push(pos)
+                    }
+                }
+
+                // 剩余位置从普通人员池中随机抽取
+                const randomSelected = getRandomElements(remainingPool, emptyForRandom.length)
+                emptyForRandom.forEach((pos, idx) => {
+                    result[pos] = randomSelected[idx]
+                })
+
+                luckyTargets.value = result.filter(Boolean)
+            }
+        }
+        else {
+            // 无内定，正常随机抽取
+            luckyTargets.value = getRandomElements(personPool.value, luckyCount.value)
+        }
+
+        // 从人员池中移除已抽中的人员
         luckyTargets.value.forEach((item) => {
             const index = personPool.value.findIndex(person => person.id === item.id)
             if (index > -1) {

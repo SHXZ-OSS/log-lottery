@@ -1,8 +1,8 @@
-import type { IPrizeConfig } from '@/types/storeType'
+import type { FixedWinnerItem, IPrizeConfig } from '@/types/storeType'
 import localforage from 'localforage'
 import { cloneDeep } from 'lodash-es'
 import { storeToRefs } from 'pinia'
-import { onMounted, ref, watch } from 'vue'
+import { nextTick, onMounted, ref, watch } from 'vue'
 import { useToast } from 'vue-toast-notification'
 import i18n from '@/locales/i18n'
 import useStore from '@/store'
@@ -20,7 +20,8 @@ export function usePrizeConfig() {
     const imgList = ref<any[]>([])
 
     const prizeList = ref(cloneDeep(localPrizeList.value))
-    const selectedPrize = ref<IPrizeConfig | null>()
+    const selectedPrize = ref<IPrizeConfig | null>(null)
+    const selectedFixedPrize = ref<IPrizeConfig | null>(null)
 
     function selectPrize(item: IPrizeConfig) {
         selectedPrize.value = item
@@ -66,6 +67,28 @@ export function usePrizeConfig() {
         selectedPrize.value = null
     }
 
+    function selectFixedPrize(item: IPrizeConfig) {
+        // 确保 fixedWinners 存在
+        if (!item.fixedWinners) {
+            item.fixedWinners = {
+                enable: false,
+                list: [],
+            }
+        }
+        // 先置空再赋值，确保 watch 能触发
+        selectedFixedPrize.value = null
+        nextTick(() => {
+            selectedFixedPrize.value = item
+        })
+    }
+
+    function submitFixedWinners(value: { enable: boolean, list: FixedWinnerItem[] }) {
+        if (selectedFixedPrize.value) {
+            selectedFixedPrize.value.fixedWinners = value
+        }
+        selectedFixedPrize.value = null
+    }
+
     async function getImageDbStore() {
         const keys = await imageDbStore.keys()
         if (keys.length > 0) {
@@ -103,6 +126,10 @@ export function usePrizeConfig() {
             isUsed: false,
             isShow: true,
             frequency: 1,
+            fixedWinners: {
+                enable: false,
+                list: [],
+            },
         }
         prizeList.value.push(defaultPrizeCOnfig)
         toast.success(i18n.global.t('error.success'))
@@ -136,5 +163,8 @@ export function usePrizeConfig() {
         changePrizeStatus,
         selectPrize,
         localImageList,
+        selectedFixedPrize,
+        selectFixedPrize,
+        submitFixedWinners,
     }
 }

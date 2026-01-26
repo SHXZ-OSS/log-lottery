@@ -1,13 +1,15 @@
 <script setup lang='ts'>
-import { Grip } from 'lucide-vue-next'
+import type { FixedWinnerItem } from '@/types/storeType'
+import { Grip, UserCheck } from 'lucide-vue-next'
 import { VueDraggable } from 'vue-draggable-plus'
 import { useI18n } from 'vue-i18n'
 import { HoverTip } from '@/components/index'
+import EditFixedWinnersDialog from '@/components/FixedWinners/EditFixedWinnersDialog.vue'
 import EditSeparateDialog from '@/components/NumberSeparate/EditSeparateDialog.vue'
 import PageHeader from '@/components/PageHeader/index.vue'
 import { usePrizeConfig } from './usePrizeConfig'
 
-const { addPrize, resetDefault, delAll, delItem, prizeList, currentPrize, selectedPrize, submitData, changePrizePerson, changePrizeStatus, selectPrize, localImageList } = usePrizeConfig()
+const { addPrize, resetDefault, delAll, delItem, prizeList, currentPrize, selectedPrize, submitData, changePrizePerson, changePrizeStatus, selectPrize, localImageList, selectedFixedPrize, selectFixedPrize, submitFixedWinners } = usePrizeConfig()
 const { t } = useI18n()
 </script>
 
@@ -135,6 +137,25 @@ const { t } = useI18n()
             <button v-else class="btn btn-secondary btn-xs">{{ t('button.setting') }}</button>
           </div>
         </label>
+        <!-- 内定人员配置 -->
+        <label class="w-full max-w-xs form-control">
+          <div class="label">
+            <span class="label-text">{{ t('table.fixedWinners') }}</span>
+          </div>
+          <div class="flex justify-start w-full h-full">
+            <button
+              class="btn btn-xs gap-1"
+              :class="item.fixedWinners?.enable ? 'btn-warning' : 'btn-ghost'"
+              @click="selectFixedPrize(item)"
+            >
+              <UserCheck class="w-4 h-4" />
+              <span v-if="item.fixedWinners?.enable && item.fixedWinners.list.length > 0">
+                {{ t('table.fixedWinnersCount', { count: item.fixedWinners.list.length }) }}
+              </span>
+              <span v-else>{{ t('button.setting') }}</span>
+            </button>
+          </div>
+        </label>
         <label class="w-full max-w-xs form-control">
           <div class="label">
             <span class="label-text">{{ t('table.operation') }}</span>
@@ -148,6 +169,10 @@ const { t } = useI18n()
     <EditSeparateDialog
       :total-number="selectedPrize?.count" :separated-number="selectedPrize?.separateCount.countList"
       @submit-data="submitData"
+    />
+    <EditFixedWinnersDialog
+      :prize="selectedFixedPrize"
+      @submit-data="submitFixedWinners"
     />
   </div>
 </template>

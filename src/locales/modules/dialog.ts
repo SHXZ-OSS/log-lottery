@@ -11,6 +11,12 @@ export const dialogEn = {
     uploadFileTitle: 'Upload File',
     uploadImageTitle: 'Upload Image',
     uploadAudioTitle: 'Upload Audio',
+    // fixed winners
+    fixedWinnersTitle: 'Fixed Winners Settings',
+    fixedWinnersTip: 'Fixed winners are guaranteed to win. If fixed count > prize count, winners will be randomly selected from fixed list.',
+    selectPerson: 'Select Person',
+    addFixedWinner: 'Add Fixed Winner',
+    enableFixedWinners: 'Enable Fixed Winners',
 }
 
 export const dialogZhCn = {
@@ -26,6 +32,12 @@ export const dialogZhCn = {
     uploadFileTitle: '上传文件',
     uploadImageTitle: '上传图片',
     uploadAudioTitle: '上传音频',
+    // fixed winners
+    fixedWinnersTitle: '内定人员设置',
+    fixedWinnersTip: '内定人员必中奖。如果内定人数大于奖项人数，则从内定人员中随机抽取。',
+    selectPerson: '选择人员',
+    addFixedWinner: '添加内定人员',
+    enableFixedWinners: '启用内定',
 }
 
 export const dialog = {

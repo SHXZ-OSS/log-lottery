@@ -26,6 +26,11 @@ export const tableEn = {
     image: 'Image',
     onceNumber: 'Once Number',
     time: 'Time',
+    // fixed winners
+    fixedWinners: 'Fixed Winners',
+    fixedWinnersCount: '{count} fixed',
+    position: 'Position',
+    noPosition: 'Random',
     // view setting
     title: 'Main Title',
     columnNumber: 'Column Number',
@@ -78,6 +83,11 @@ export const tableZhCn = {
     image: '图片',
     onceNumber: '单次抽取个数',
     time: '时间',
+    // fixed winners
+    fixedWinners: '内定人员',
+    fixedWinnersCount: '已内定{count}人',
+    position: '指定位置',
+    noPosition: '随机',
     // view setting
     title: '主标题',
     columnNumber: '列数',
