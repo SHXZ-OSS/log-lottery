@@ -69,50 +69,18 @@ const displayInfo = computed(() => {
     }
 })
 
-// 触发礼花效果
-const fireConfetti = (rank: number) => {
+// 触发礼花效果 - 所有人都使用大量金色confetti
+const fireConfetti = () => {
     const zIndex = 99999
 
-    if (rank === 1) {
-        confetti({
-            particleCount: 500,
-            ticks: 100,
-            spread: 100,
-            origin: { y: 0.6, x: 0.5 },
-            colors: ['#FFD700', '#FFFACD', '#FFA500'],
-            zIndex,
-        })
-    }
-    else if (rank === 2) {
-        confetti({
-            particleCount: 300,
-            ticks: 100,
-            spread: 80,
-            origin: { y: 0.6, x: 0.5 },
-            colors: ['#C0C0C0', '#DCDCDC', '#A9A9A9'],
-            zIndex,
-        })
-    }
-    else if (rank === 3) {
-        confetti({
-            particleCount: 200,
-            ticks: 100,
-            spread: 70,
-            origin: { y: 0.6, x: 0.5 },
-            colors: ['#CD7F32', '#8B4513', '#A0522D'],
-            zIndex,
-        })
-    }
-    else {
-        confetti({
-            particleCount: 80,
-            ticks: 100,
-            spread: 50,
-            origin: { y: 0.6, x: 0.5 },
-            colors: ['#1677ff', '#52c41a', '#faad14'],
-            zIndex,
-        })
-    }
+    confetti({
+        particleCount: 500,
+        ticks: 100,
+        spread: 100,
+        origin: { y: 0.6, x: 0.5 },
+        colors: ['#FFD700', '#FFFACD', '#FFA500'],
+        zIndex,
+    })
 }
 
 // 清理定时器
@@ -139,7 +107,7 @@ const nextStep = () => {
 
     // 在展示姓名时（step === 1，因为现在只有2步）触发礼花和音效
     if (info.phase === 'winner' && info.step === 1) {
-        fireConfetti(info.winnerIndex + 1)
+        fireConfetti()
         playSound()
     }
 
