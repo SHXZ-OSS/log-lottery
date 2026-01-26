@@ -296,7 +296,7 @@ onUnmounted(() => {
 }
 
 .showcase-title {
-    font-size: 10rem;
+    font-size: 20rem;
     font-weight: bold;
     color: #fff;
     z-index: 1;
@@ -309,19 +309,17 @@ onUnmounted(() => {
     transform: translate(-50%, -50%);
     width: 100%;
     color: #fff;
-    height: 38rem;
+    height: 45rem;
     z-index: 1;
 }
 
 .info-row {
     position: absolute;
-    height: 14rem;
-    font-size: 10rem;
+    width: 100%;
     font-weight: bold;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 100%;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -329,14 +327,18 @@ onUnmounted(() => {
 
 .row-1 {
     top: 0;
+    height: 6rem;
+    font-size: 4rem;
 }
 
 .row-2 {
-    top: 18rem;
+    top: 8rem;
+    height: 37rem;
 }
 
 .name-row {
-    font-size: 13rem;
+    font-size: 35rem;
+    line-height: 1;
     color: #FFD700;
 }
 
@@ -353,24 +355,25 @@ onUnmounted(() => {
 
 @media (max-width: 768px) {
     .showcase-title {
-        font-size: 5rem;
-    }
-
-    .info-row {
-        font-size: 3.5rem;
-        height: 5rem;
-    }
-
-    .row-2 {
-        top: 7rem;
+        font-size: 6rem;
     }
 
     .winner-info-container {
-        height: 14rem;
+        height: 16rem;
+    }
+
+    .row-1 {
+        height: 3rem;
+        font-size: 1.5rem;
+    }
+
+    .row-2 {
+        top: 4rem;
+        height: 12rem;
     }
 
     .name-row {
-        font-size: 4.5rem;
+        font-size: 10rem;
     }
 }
 </style>
