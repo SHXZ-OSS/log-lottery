@@ -8,6 +8,19 @@ export function readFileBinary(file: File | Blob): Promise<string> {
     })
 }
 
+export function readFileAsArrayBuffer(file: File | Blob): Promise<ArrayBuffer> {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader()
+        reader.readAsArrayBuffer(file)
+        reader.onload = (ev: any) => {
+            resolve(ev.target.result)
+        }
+        reader.onerror = () => {
+            reject(new Error('文件读取失败'))
+        }
+    })
+}
+
 export function readFileData(file: File): Promise<{ data: string, fileName: string }> {
     return new Promise((resolve) => {
         const reader = new FileReader()

@@ -21,7 +21,7 @@ globalThis.onmessage = async (e: MessageEvent<WorkerMessage>) => {
             const fileData = e.data.data
             const templateData = e.data.templateData
 
-            const workBook = XLSX.read(fileData, { type: 'binary', cellDates: true })
+            const workBook = XLSX.read(fileData, { type: 'array', cellDates: true })
             const workSheet = workBook.Sheets[workBook.SheetNames[0]]
             const excelData: object[] = XLSX.utils.sheet_to_json(workSheet)
 

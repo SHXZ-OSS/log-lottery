@@ -10,7 +10,7 @@ import { loadingKey } from '@/components/Loading'
 import i18n from '@/locales/i18n'
 import useStore from '@/store'
 import { addOtherInfo } from '@/utils'
-import { readFileBinary, readLocalFileAsArraybuffer } from '@/utils/file'
+import { readFileAsArrayBuffer, readLocalFileAsArraybuffer } from '@/utils/file'
 import { tableColumns } from './columns'
 import ImportExcelWorker from './importExcel.worker?worker'
 
@@ -51,7 +51,7 @@ export function useViewModel({ exportInputFileRef }: { exportInputFileRef: Ref<H
         }
     }
     /// 开始导入
-    async function startWorker(data: string) {
+    async function startWorker(data: ArrayBuffer) {
         loading?.show()
         getExcelTemplateContent()
         sendWorkerMessage({ type: 'start', data, templateData: await getExcelTemplateContent() })
@@ -93,7 +93,7 @@ export function useViewModel({ exportInputFileRef }: { exportInputFileRef: Ref<H
                 loading?.hide()
             }
         }
-        const dataBinary = await readFileBinary(((e.target as HTMLInputElement).files as FileList)[0]!)
+        const dataBinary = await readFileAsArrayBuffer(((e.target as HTMLInputElement).files as FileList)[0]!)
         startWorker(dataBinary)
     }
     // 清空file input
